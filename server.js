@@ -1,16 +1,17 @@
 const express = require("express");
 const mongoose = require("mongoose");
+require("dotenv").config();
 const ShortUrl = require("./models/shortUrl");
 const app = express();
 
-mongoose.connect("mongodb://localhost/urlShortener", {
+mongoose.connect(process.env.MONGO_URL, {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
 
 app.set("view engine", "ejs");
 app.use(express.urlencoded({ extended: false }));
-
+app.use("/styles", express.static(__dirname + "/styles"));
 app.get("/", async (req, res) => {
   const shortUrls = await ShortUrl.find();
   res.render("index", { shortUrls: shortUrls });
